@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questionnaire usine d'eau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: one narrow column of numbered sections, a sticky progress bar, and a results panel at the end. */
+:root{
+  --bg:#f3f7f8; --surface:#ffffff; --ink:#12262e; --muted:#5a6f78; --line:#d5e2e6;
+  --accent:#0b6e8a; --accent-soft:#e1f1f5; --good:#1d7a4f; --warn:#a2650a; --no:#8a8f93;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c171c; --surface:#13232a; --ink:#e3eef1; --muted:#97adb5; --line:#26404a;
+    --accent:#4cc0dd; --accent-soft:#163541; --good:#5cc993; --warn:#e3a849; --no:#8d989c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c171c; --surface:#13232a; --ink:#e3eef1; --muted:#97adb5; --line:#26404a;
+  --accent:#4cc0dd; --accent-soft:#163541; --good:#5cc993; --warn:#e3a849; --no:#8d989c;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 80px}
+header{padding:28px 0 12px}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:1.9rem}
+.lede{color:var(--muted);margin:10px 0 0;max-width:62ch}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center}
+.track{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .2s}
+.count{font-size:.9rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+section{margin-top:28px}
+section>h2{font-size:1.3rem;display:flex;gap:10px;align-items:baseline}
+section>h2 .n{color:var(--accent);font-variant-numeric:tabular-nums}
+section>p.intro{color:var(--muted);margin:4px 0 0}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:12px}
+.q.done{border-left:4px solid var(--accent)}
+.q legend,.q .label{font-weight:600;padding:0;margin-bottom:8px;display:block}
+.q .hint{color:var(--muted);font-size:.9rem;margin:-4px 0 8px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.opts{display:grid;gap:6px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:8px;border:1px solid var(--line);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt input{margin-top:4px;accent-color:var(--accent);width:18px;height:18px;flex:none}
+.opt:has(input:checked){background:var(--accent-soft);border-color:var(--accent)}
+input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+textarea{min-height:76px;resize:vertical}
+.other{margin-top:8px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+/* Need-level rows */
+.need{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.need:first-of-type{border-top:0}
+.need .what{font-weight:600}
+.need .what small{display:block;font-weight:400;color:var(--muted);font-size:.88rem}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg label{padding:6px 10px;font-size:.88rem;cursor:pointer;border-left:1px solid var(--line);white-space:nowrap}
+.seg label:first-child{border-left:0}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked).v2{background:var(--good);color:var(--surface)}
+.seg label:has(input:checked).v1{background:var(--warn);color:var(--surface)}
+.seg label:has(input:checked).v0{background:var(--no);color:var(--surface)}
+.seg label:has(input:focus-visible){outline:3px solid var(--accent);outline-offset:-3px}
+@media (max-width:520px){.need{grid-template-columns:1fr}.seg{justify-self:stretch}.seg label{flex:1;text-align:center}}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.88rem;color:var(--muted);margin-top:8px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.result{margin-top:36px;background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:18px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+button,.btn{font:inherit;font-weight:600;border-radius:8px;padding:10px 16px;cursor:pointer;border:1px solid var(--accent);text-decoration:none;display:inline-block}
+.primary{background:var(--accent);color:var(--surface)}
+.ghost{background:transparent;color:var(--accent)}
+details summary{cursor:pointer;color:var(--accent);font-weight:600;margin:8px 0}
+pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font-size:.88rem;max-height:340px;overflow:auto}
+.status{color:var(--good);font-weight:600;min-height:1.5em}
+@media (prefers-reduced-motion: reduce){.fill{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Questionnaire pour l'application de l'usine d'eau</h1>
+  <p class="lede">Ces questions servent à décider ce que l'application doit faire pour l'usine, et ce dont elle n'a pas besoin. Cochez ce qui correspond. Il n'y a pas de mauvaise réponse, et chaque question accepte une réponse libre. À la fin, appuyez sur « Envoyer mes réponses ».</p>
+</header>
+<div class="bar" role="status" aria-live="polite"><div class="track"><div class="fill" id="fill"></div></div><span class="count" id="count">0 réponse</span></div>
+<form id="form" novalidate></form>
+<div class="result">
+  <h2>Envoyer les réponses</h2>
+  <p class="lede">Vos réponses sont enregistrées sur ce téléphone pendant que vous remplissez. Quand vous avez fini, appuyez sur Envoyer.</p>
+  <div class="actions">
+    <button type="button" class="primary" id="send">Envoyer mes réponses</button>
+    <button type="button" class="ghost" id="reset">Tout effacer</button>
+  </div>
+  <p class="status" id="status" role="status"></p>
+  <details><summary>Voir le résumé</summary><pre id="out"></pre></details>
+  <div id="confirm" hidden>
+    <p><strong>Effacer toutes les réponses ?</strong> Cette action est définitive.</p>
+    <div class="actions"><button type="button" class="primary" id="yes">Oui, tout effacer</button><button type="button" class="ghost" id="no">Annuler</button></div>
+  </div>
+</div>
+</div>
+<script>
+// type: one = choix unique, many = cases à cocher, text = réponse libre, need = Indispensable / Utile / Pas besoin
+const S = [
+ {t:"L'usine", intro:"Pour comprendre le projet.", q:[
+  {id:"nom", type:"text", short:true, l:"Votre nom"},
+  {id:"ouverture", type:"one", l:"Quand l'usine doit-elle ouvrir ?", o:["Dans moins d'un mois","Dans 1 à 3 mois","Dans 3 à 6 mois","Dans plus de 6 mois","Pas encore de date"]},
+  {id:"produits", type:"many", l:"Quels produits allez-vous vendre ?", o:["Sachets d'eau (pure water)","Bouteilles 0,5 L","Bouteilles 1,5 L","Bidons 5 L","Bidons 10 L","Bonbonnes 18,9 L / 20 L","Glace / sachets glacés"], other:true},
+  {id:"conditionnement", type:"one", l:"Comment les sachets seront-ils vendus ?", o:["Au sac / paquet (ex. 30 sachets)","À l'unité","Les deux"], other:true},
+  {id:"capacite", type:"one", l:"Production prévue par jour (en sacs / paquets) ?", o:["Moins de 200","200 à 500","500 à 1 000","Plus de 1 000","Je ne sais pas encore"]},
+  {id:"machines", type:"many", l:"Quels équipements sont prévus ?", o:["Machine d'ensachage automatique","Forage","Traitement / filtration (osmose, UV)","Groupe électrogène","Tricycle(s) / moto(s) de livraison","Camion / véhicule de livraison","Chambre froide / congélateurs"], other:true}
+ ]},
+ {t:"Qui va utiliser l'application", intro:"Chaque personne aura un accès adapté à son rôle.", q:[
+  {id:"utilisateurs", type:"many", l:"Qui utilisera l'application ?", o:["Le patron","Un gérant / responsable","Le caissier ou la caissière","Les opérateurs de production","Les livreurs","Le magasinier","Un comptable"], other:true},
+  {id:"nb_livreurs", type:"one", l:"Combien de livreurs au départ ?", o:["Aucun, les clients viennent à l'usine","1 à 2","3 à 5","6 à 10","Plus de 10"]},
+  {id:"nb_employes", type:"one", l:"Combien d'employés au total ?", o:["1 à 3","4 à 8","9 à 15","Plus de 15"]},
+  {id:"telephones", type:"one", l:"Les employés ont-ils un smartphone ?", o:["Oui, tous","Certains seulement","Non, il faudra en acheter","Je ne sais pas"]},
+  {id:"tel_patron", type:"many", l:"Sur quoi le patron utilisera-t-il l'application ?", o:["Téléphone Android","iPhone","Ordinateur","Tablette"]},
+  {id:"internet", type:"one", l:"La connexion internet sur les routes de livraison est…", o:["Bonne partout","Parfois coupée","Souvent absente","Je ne sais pas"], hint:"Si la connexion est mauvaise, l'application doit fonctionner sans internet et se synchroniser plus tard."},
+  {id:"langue", type:"many", l:"Dans quelle langue l'application doit-elle être ?", o:["Français","Anglais"], other:true},
+  {id:"aise", type:"one", l:"Les employés sont-ils à l'aise avec les applications ?", o:["Oui, ils utilisent WhatsApp et Mobile Money sans problème","Moyennement","Peu, il faut des écrans très simples"]}
+ ]},
+ {t:"La vente", intro:"Comment l'eau arrivera chez les clients.", q:[
+  {id:"canaux", type:"many", l:"Comment allez-vous vendre ?", o:["Livraison par nos livreurs","Vente directe à l'usine","Dépôts / revendeurs dans les quartiers","Contrats (boutiques, restaurants, écoles, entreprises)","Événements (mariages, funérailles, fêtes)"], other:true},
+  {id:"clients", type:"many", l:"Quels types de clients aurez-vous ?", o:["Particuliers","Petites boutiques / vendeuses","Revendeurs","Grossistes","Bars, restaurants, hôtels","Entreprises / administrations"], other:true},
+  {id:"prix", type:"one", l:"Les prix seront-ils différents selon le client ?", o:["Oui, un prix par type de client","Oui, avec des remises au volume","Non, un seul prix pour tous","Pas encore décidé"]},
+  {id:"credit", type:"one", l:"Allez-vous vendre à crédit ?", o:["Oui, souvent","Oui, à quelques clients de confiance","Non, jamais","Pas encore décidé"]},
+  {id:"paiements", type:"many", l:"Moyens de paiement acceptés ?", o:["Espèces","Orange Money","MTN Mobile Money","Virement bancaire","Chèque"], other:true},
+  {id:"commission", type:"one", l:"Comment les livreurs seront-ils payés ?", o:["Salaire fixe","Commission sur les ventes","Salaire + commission","Pas encore décidé"], other:true},
+  {id:"emballages", type:"one", l:"Y aura-t-il des emballages consignés (bonbonnes, bidons à retourner) ?", o:["Oui","Non","Peut-être"]}
+ ]},
+ {t:"Ce dont l'application a besoin", intro:"Pour chaque fonction, choisissez si elle est indispensable, utile ou inutile.", need:true, q:[
+  {id:"f_prod", l:"Saisie de la production du jour", d:"Nombre de sacs produits, par produit et par équipe"},
+  {id:"f_film", l:"Suivi du film plastique et des intrants", d:"Film utilisé, gaspillage, rendement par rouleau"},
+  {id:"f_achats", l:"Achats et fournisseurs", d:"Commandes de film, bouchons et carburant, dettes envers les fournisseurs"},
+  {id:"f_inventaire", l:"Inventaire physique", d:"Comptage régulier du stock et comparaison avec les chiffres de l'application"},
+  {id:"f_stock", l:"Stock et alertes de réapprovisionnement", d:"Film, bouchons, étiquettes, carburant, produit fini"},
+  {id:"f_charge", l:"Chargement des livreurs", d:"Ce que chaque livreur emporte le matin et ramène le soir"},
+  {id:"f_ventes", l:"Ventes sur le terrain par les livreurs", d:"Le livreur note chaque vente depuis son téléphone"},
+  {id:"f_versement", l:"Versement des livreurs", d:"Argent attendu comparé à l'argent remis, avec les écarts"},
+  {id:"f_caisse", l:"Caisse du soir", d:"Clôture du jour : ventes, dépenses, argent qui doit être en caisse"},
+  {id:"f_credit", l:"Crédits clients", d:"Qui doit combien, depuis quand, avec un plafond par client"},
+  {id:"f_rappel", l:"Rappels de paiement par WhatsApp", d:"Message prêt à envoyer au client qui doit de l'argent"},
+  {id:"f_clients", l:"Fichier clients", d:"Nom, téléphone, quartier, type de client, historique"},
+  {id:"f_tournees", l:"Tournées et carte des clients", d:"Itinéraires des livreurs, position GPS des clients"},
+  {id:"f_commandes", l:"Commandes des clients", d:"Le client commande, l'usine prépare et livre"},
+  {id:"f_depenses", l:"Dépenses de l'usine", d:"Carburant, électricité, réparations, salaires"},
+  {id:"f_salaires", l:"Salaires et commissions", d:"Calcul automatique de la paie et des commissions"},
+  {id:"f_maintenance", l:"Entretien des machines", d:"Calendrier d'entretien, pannes, changement des filtres"},
+  {id:"f_qualite", l:"Contrôle qualité de l'eau", d:"Tests, analyses, nettoyage des cuves"},
+  {id:"f_tableau", l:"Tableau de bord du patron", d:"Résumé du jour et du mois sur son téléphone"},
+  {id:"f_alertes", l:"Alertes au patron", d:"Écart de caisse, crédit en retard, stock bas, panne"},
+  {id:"f_marges", l:"Coût de revient et bénéfice", d:"Coût par sac, marge par produit et par type de client"},
+  {id:"f_recus", l:"Reçus et factures", d:"Reçu WhatsApp ou imprimé pour le client"},
+  {id:"f_photos", l:"Photos des reçus et dépenses", d:"Prendre en photo les factures et les preuves de paiement"},
+  {id:"f_documents", l:"Documents de l'usine", d:"Bons de livraison, fiches de chargement, contrats de livreurs et de revendeurs"},
+  {id:"f_hygiene", l:"Registres d'hygiène et de nettoyage", d:"Utiles en cas de contrôle sanitaire"},
+  {id:"f_rapports", l:"Rapports à imprimer ou exporter", d:"Rapport PDF ou Excel pour le comptable ou la banque"},
+  {id:"f_budget", l:"Suivi du budget de construction (avant l'ouverture)", d:"Dépenses des travaux et des équipements comparées au budget"},
+  {id:"f_simulateur", l:"Simulateur de rentabilité (avant l'ouverture)", d:"Combien de sacs vendre par jour pour couvrir les coûts"},
+  {id:"f_multi", l:"Plusieurs usines ou dépôts", d:"Gérer un deuxième site plus tard"}
+ ]},
+ {t:"Argent et contrôle", intro:"Ce qui inquiète le plus le patron.", q:[
+  {id:"soucis", type:"many", l:"Quelles sont les plus grandes craintes ?", o:["Argent qui disparaît de la caisse","Livreurs qui ne versent pas tout","Clients qui ne paient pas leurs crédits","Gaspillage de film et d'intrants","Vol de marchandise","Pannes de machines","Ne pas savoir si l'usine gagne de l'argent","Ne pas pouvoir surveiller quand il est absent"], other:true},
+  {id:"suivi", type:"one", l:"À quelle fréquence le patron veut-il voir les chiffres ?", o:["En temps réel, à tout moment","Un résumé chaque soir","Une fois par semaine","Une fois par mois"]},
+  {id:"notif", type:"many", l:"Comment recevoir les alertes ?", o:["Notification dans l'application","Message WhatsApp","SMS","Pas d'alerte"]},
+  {id:"acces", type:"one", l:"Les employés peuvent-ils voir les chiffres de l'usine ?", o:["Non, seulement leur propre travail","Le gérant voit tout, les autres seulement leur travail","Tout le monde voit tout"]},
+  {id:"modif", type:"one", l:"Qui peut corriger une saisie déjà enregistrée ?", o:["Seulement le patron","Le patron et le gérant","Chacun peut corriger ses saisies, avec un historique"]}
+ ]},
+ {t:"Aspects pratiques", intro:"Pour choisir comment construire l'application.", q:[
+  {id:"actuel", type:"many", l:"Qu'utilise le patron aujourd'hui pour gérer ses affaires ?", o:["Cahier","Excel","Une autre application","Rien pour l'instant"], other:true},
+  {id:"impression", type:"one", l:"Faut-il imprimer des reçus ?", o:["Oui, avec une petite imprimante Bluetooth","Non, un reçu WhatsApp suffit","Pas besoin de reçu"]},
+  {id:"budget", type:"one", l:"Budget mensuel pour l'application (hébergement, abonnement) ?", o:["Gratuit uniquement","Moins de 5 000 FCFA par mois","5 000 à 15 000 FCFA par mois","Plus de 15 000 FCFA par mois","À discuter"]},
+  {id:"admin", type:"one", l:"Qui va gérer l'application (ajouter les employés, les prix) ?", o:["Le patron lui-même","Le gérant","Moussa / la famille","Pas encore décidé"], other:true},
+  {id:"delai", type:"one", l:"Pour quand l'application doit-elle être prête ?", o:["Avant l'ouverture","Le jour de l'ouverture","Dans les premiers mois","Pas pressé"]}
+ ]},
+ {t:"Pour finir", intro:"Tout ce qui n'a pas été demandé.", q:[
+  {id:"priorite", type:"text", l:"Si l'application ne devait faire qu'une seule chose, ce serait quoi ?"},
+  {id:"pas_besoin", type:"text", l:"Y a-t-il quelque chose que l'application ne doit surtout PAS faire ?"},
+  {id:"remarques", type:"text", l:"Autres remarques ou idées"}
+ ]}
+];
+const NEED = ["Indispensable","Utile","Pas besoin"];
+const KEY = "rawda-questionnaire-v1";
+const form = document.getElementById("form");
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let html = "";
+S.forEach((sec, si) => {
+  html += `<section><h2><span class="n">${si+1}.</span> ${esc(sec.t)}</h2><p class="intro">${esc(sec.intro)}</p>`;
+  if (sec.need) {
+    html += `<div class="q" data-need><div class="legend"><span><span class="dot" style="background:var(--good)"></span>Indispensable</span><span><span class="dot" style="background:var(--warn)"></span>Utile, plus tard</span><span><span class="dot" style="background:var(--no)"></span>Pas besoin</span></div>`;
+    sec.q.forEach(q => {
+      html += `<div class="need" data-q="${q.id}"><div class="what" id="l_${q.id}">${esc(q.l)}<small>${esc(q.d)}</small></div><div class="seg" role="radiogroup" aria-labelledby="l_${q.id}">` +
+        NEED.map((n, i) => `<label class="v${2-i}"><input type="radio" name="${q.id}" id="${q.id}_${i}" value="${n}">${n}</label>`).join("") + `</div></div>`;
+    });
+    html += `<div class="other"><label class="label" for="f_autre">Autre fonction souhaitée</label><input type="text" id="f_autre" name="f_autre" placeholder="Décrivez la fonction"></div></div>`;
+  } else {
+    sec.q.forEach(q => {
+      html += `<div class="q" data-q="${q.id}">`;
+      if (q.type === "text") {
+        html += `<label class="label" for="${q.id}">${esc(q.l)}</label>` + (q.short ? `<input type="text" id="${q.id}" name="${q.id}" autocomplete="name">` : `<textarea id="${q.id}" name="${q.id}"></textarea>`);
+      } else {
+        const t = q.type === "one" ? "radio" : "checkbox";
+        html += `<fieldset><legend>${esc(q.l)}</legend>${q.hint ? `<p class="hint">${esc(q.hint)}</p>` : ""}${q.type==="many" ? `<p class="hint">Plusieurs choix possibles.</p>` : ""}<div class="opts">` +
+          q.o.map((o, i) => `<label class="opt"><input type="${t}" name="${q.id}" id="${q.id}_${i}" value="${esc(o)}"><span>${esc(o)}</span></label>`).join("") +
+          `</div></fieldset><div class="other"><input type="text" id="${q.id}_autre" name="${q.id}_autre" aria-label="${q.other ? "Autre réponse" : "Précision"} : ${esc(q.l)}" placeholder="${q.other ? "Autre, précisez…" : "Précision ou commentaire (facultatif)"}"></div>`;
+      }
+      html += `</div>`;
+    });
+  }
+  html += `</section>`;
+});
+form.innerHTML = html;
+
+function collect() {
+  const d = {};
+  form.querySelectorAll("input,textarea").forEach(el => {
+    if ((el.type === "radio" || el.type === "checkbox")) { if (el.checked) (d[el.name] ||= []).push(el.value); }
+    else if (el.value.trim()) d[el.name] = el.value.trim();
+  });
+  return d;
+}
+function summary(d) {
+  const lines = ["QUESTIONNAIRE APPLICATION USINE D'EAU", ""];
+  S.forEach((sec, si) => {
+    lines.push(`== ${si+1}. ${sec.t.toUpperCase()} ==`);
+    if (sec.need) {
+      NEED.forEach(n => {
+        const items = sec.q.filter(q => (d[q.id]||[])[0] === n).map(q => "  - " + q.l);
+        if (items.length) lines.push(n + " :", ...items);
+      });
+      const none = sec.q.filter(q => !d[q.id]).length;
+      if (none) lines.push(`(${none} fonction(s) sans réponse)`);
+      if (d.f_autre) lines.push("Autre fonction : " + d.f_autre);
+    } else {
+      sec.q.forEach(q => {
+        const parts = [];
+        if (q.type === "text") { if (d[q.id]) parts.push(d[q.id]); }
+        else { if (d[q.id]) parts.push(d[q.id].join(", ")); if (d[q.id+"_autre"]) parts.push((q.other ? "Autre : " : "Note : ") + d[q.id+"_autre"]); }
+        lines.push(`- ${q.l}\n  ${parts.length ? parts.join(" | ") : "(pas de réponse)"}`);
+      });
+    }
+    lines.push("");
+  });
+  return lines.join("\n").trim();
+}
+const total = S.reduce((n, s) => n + s.q.length, 0);
+function refresh(save = true) {
+  const d = collect();
+  let answered = 0;
+  form.querySelectorAll("[data-q]").forEach(box => {
+    const id = box.dataset.q;
+    const ok = !!(d[id] || d[id+"_autre"]);
+    if (ok) answered++;
+    if (box.classList.contains("q")) box.classList.toggle("done", ok);
+  });
+  document.getElementById("fill").style.width = (answered/total*100) + "%";
+  document.getElementById("count").textContent = `${answered} / ${total} réponses`;
+  const text = summary(d);
+  document.getElementById("out").textContent = text;
+  if (save) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
+}
+function restore() {
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) {}
+  if (!d) return;
+  form.querySelectorAll("input,textarea").forEach(el => {
+    const v = d[el.name];
+    if (v == null) return;
+    if (el.type === "radio" || el.type === "checkbox") el.checked = Array.isArray(v) && v.includes(el.value);
+    else el.value = v;
+  });
+}
+form.addEventListener("input", () => refresh());
+form.addEventListener("change", () => refresh());
+form.addEventListener("submit", e => e.preventDefault());
+const status = document.getElementById("status");
+const ENDPOINT = "https://formsubmit.co/ajax/__ENDPOINT__";
+const sendBtn = document.getElementById("send");
+sendBtn.addEventListener("click", async () => {
+  const d = collect();
+  if (!Object.keys(d).length) { status.style.color = "var(--warn)"; status.textContent = "Le formulaire est vide. Répondez à au moins une question avant d'envoyer."; return; }
+  sendBtn.disabled = true; status.style.color = ""; status.textContent = "Envoi en cours…";
+  try {
+    const r = await fetch(ENDPOINT, {method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"},
+      body: JSON.stringify({_subject:"Questionnaire usine d'eau : " + (d.nom || "nouvelle réponse"), _template:"box", _captcha:"false", Nom: d.nom || "", Reponses: summary(d)})});
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || j.success === false || j.success === "false") throw new Error(j.message || r.status);
+    status.style.color = ""; status.textContent = "Merci ! Vos réponses ont bien été envoyées.";
+  } catch (e) {
+    status.style.color = "var(--warn)";
+    status.textContent = "L'envoi n'a pas marché. Vérifiez la connexion internet et réessayez. Vos réponses restent enregistrées.";
+  } finally { sendBtn.disabled = false; }
+});
+const conf = document.getElementById("confirm");
+document.getElementById("reset").addEventListener("click", () => { conf.hidden = false; });
+document.getElementById("no").addEventListener("click", () => { conf.hidden = true; });
+document.getElementById("yes").addEventListener("click", () => {
+  form.reset(); try { localStorage.removeItem(KEY); } catch (e) {}
+  conf.hidden = true; refresh(false); status.textContent = "Toutes les réponses ont été effacées.";
+});
+restore(); refresh(false);
+</script>
+</body>
+</html>
