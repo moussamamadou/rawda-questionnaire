@@ -144,6 +144,8 @@ const S = [
   {id:"commission", type:"one", l:"Comment les livreurs seront-ils payés ?", o:["Salaire fixe","Commission sur les ventes","Salaire + commission","Pas encore décidé"], other:true},
   {id:"commission_regle", type:"one", l:"Si les livreurs ont une commission, comment sera-t-elle payée ?", o:["Payée à part, chaque soir","Payée à part, chaque semaine ou chaque mois","Le livreur la garde sur l'argent du soir","Pas de commission"]},
   {id:"tricycles", type:"one", l:"À qui appartiendront les tricycles / motos de livraison ?", o:["À l'usine","Aux livreurs","En location","Pas de tricycle"], other:true},
+  {id:"concurrence", type:"one", l:"Combien d'usines d'eau en sachet y a-t-il déjà dans la zone ?", o:["Aucune","1 ou 2","3 à 5","Plus de 5","Je ne sais pas"]},
+  {id:"prix_concurrents", type:"text", short:true, l:"À quel prix les concurrents vendent-ils le paquet ? (comptoir, revendeur)"},
   {id:"emballages", type:"one", l:"Y aura-t-il des emballages consignés (bonbonnes, bidons à retourner) ?", o:["Oui","Non","Peut-être"]}
  ]},
  {t:"Ce dont l'application a besoin", intro:"Pour chaque fonction, choisissez si elle est indispensable, utile ou inutile.", need:true, q:[
@@ -174,7 +176,6 @@ const S = [
   {id:"f_evenements", l:"Commandes d'événements avec acompte", d:"Mariages, funérailles, baptêmes : acompte, date, bon de livraison"},
   {id:"f_consigne", l:"Bonbonnes et emballages consignés", d:"Qui a combien de bonbonnes, cautions versées et rendues"},
   {id:"f_saisons", l:"Préparation de la saison sèche", d:"Prévoir le stock de film et la production quand les ventes montent"},
-  {id:"f_demarches", l:"Autorisations et analyses officielles", d:"Dates des analyses, certification, autorisations, rappels avant expiration"},
   {id:"f_tableau", l:"Tableau de bord du patron", d:"Résumé du jour et du mois sur son téléphone"},
   {id:"f_alertes", l:"Alertes au patron", d:"Écart de caisse, crédit en retard, stock bas, panne"},
   {id:"f_marges", l:"Coût de revient et bénéfice", d:"Coût par sac, marge par produit et par type de client"},
@@ -191,11 +192,6 @@ const S = [
   {id:"notif", type:"many", l:"Comment recevoir les alertes ?", o:["Notification dans l'application","Message WhatsApp","SMS","Pas d'alerte"]},
   {id:"acces", type:"one", l:"Les employés peuvent-ils voir les chiffres de l'usine ?", o:["Non, seulement leur propre travail","Le gérant voit tout, les autres seulement leur travail","Tout le monde voit tout"]},
   {id:"modif", type:"one", l:"Qui peut corriger une saisie déjà enregistrée ?", o:["Seulement le patron","Le patron et le gérant","Chacun peut corriger ses saisies, avec un historique"]}
- ]},
- {t:"Avant l'ouverture", intro:"Pour savoir où en est le projet.", q:[
-  {id:"demarches", type:"many", l:"Où en sont les démarches ?", o:["Entreprise enregistrée (RCCM, NIU)","Analyse de l'eau faite par un laboratoire","Certification / autorisation de l'eau en cours (ANOR, ministère)","Inspection d'hygiène prévue","Pas encore commencé","Je ne sais pas"], other:true},
-  {id:"concurrence", type:"one", l:"Combien d'usines d'eau en sachet y a-t-il déjà dans la zone ?", o:["Aucune","1 ou 2","3 à 5","Plus de 5","Je ne sais pas"]},
-  {id:"prix_concurrents", type:"text", short:true, l:"À quel prix les concurrents vendent-ils le paquet ? (comptoir, revendeur)"}
  ]},
  {t:"Aspects pratiques", intro:"Pour choisir comment construire l'application.", q:[
   {id:"actuel", type:"many", l:"Qu'utilise le patron aujourd'hui pour gérer ses affaires ?", o:["Cahier","Excel","Une autre application","Rien pour l'instant"], other:true},
