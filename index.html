@@ -175,7 +175,6 @@ const S = [
   {id:"f_consigne", l:"Bonbonnes et emballages consignés", d:"Qui a combien de bonbonnes, cautions versées et rendues"},
   {id:"f_saisons", l:"Préparation de la saison sèche", d:"Prévoir le stock de film et la production quand les ventes montent"},
   {id:"f_demarches", l:"Autorisations et analyses officielles", d:"Dates des analyses, certification, autorisations, rappels avant expiration"},
-  {id:"f_impots", l:"Impôts et CNPS", d:"Rappels des échéances, dépenses fiscales et sociales"},
   {id:"f_tableau", l:"Tableau de bord du patron", d:"Résumé du jour et du mois sur son téléphone"},
   {id:"f_alertes", l:"Alertes au patron", d:"Écart de caisse, crédit en retard, stock bas, panne"},
   {id:"f_marges", l:"Coût de revient et bénéfice", d:"Coût par sac, marge par produit et par type de client"},
@@ -184,8 +183,6 @@ const S = [
   {id:"f_documents", l:"Documents de l'usine", d:"Bons de livraison, fiches de chargement, contrats de livreurs et de revendeurs"},
   {id:"f_hygiene", l:"Registres d'hygiène et de nettoyage", d:"Utiles en cas de contrôle sanitaire"},
   {id:"f_rapports", l:"Rapports à imprimer ou exporter", d:"Rapport PDF ou Excel pour le comptable ou la banque"},
-  {id:"f_budget", l:"Suivi du budget de construction (avant l'ouverture)", d:"Dépenses des travaux et des équipements comparées au budget"},
-  {id:"f_simulateur", l:"Simulateur de rentabilité (avant l'ouverture)", d:"Combien de sacs vendre par jour pour couvrir les coûts"},
   {id:"f_multi", l:"Plusieurs usines ou dépôts", d:"Gérer un deuxième site plus tard"}
  ]},
  {t:"Argent et contrôle", intro:"Ce qui inquiète le plus le patron.", q:[
@@ -193,15 +190,11 @@ const S = [
   {id:"suivi", type:"one", l:"À quelle fréquence le patron veut-il voir les chiffres ?", o:["En temps réel, à tout moment","Un résumé chaque soir","Une fois par semaine","Une fois par mois"]},
   {id:"notif", type:"many", l:"Comment recevoir les alertes ?", o:["Notification dans l'application","Message WhatsApp","SMS","Pas d'alerte"]},
   {id:"acces", type:"one", l:"Les employés peuvent-ils voir les chiffres de l'usine ?", o:["Non, seulement leur propre travail","Le gérant voit tout, les autres seulement leur travail","Tout le monde voit tout"]},
-  {id:"comptes", type:"many", l:"Faut-il rendre des comptes à quelqu'un d'autre ?", o:["Des associés","Une banque ou une microfinance","Un comptable","Non, personne"], other:true},
   {id:"modif", type:"one", l:"Qui peut corriger une saisie déjà enregistrée ?", o:["Seulement le patron","Le patron et le gérant","Chacun peut corriger ses saisies, avec un historique"]}
  ]},
  {t:"Avant l'ouverture", intro:"Pour savoir où en est le projet.", q:[
   {id:"demarches", type:"many", l:"Où en sont les démarches ?", o:["Entreprise enregistrée (RCCM, NIU)","Analyse de l'eau faite par un laboratoire","Certification / autorisation de l'eau en cours (ANOR, ministère)","Inspection d'hygiène prévue","Pas encore commencé","Je ne sais pas"], other:true},
   {id:"statut", type:"one", l:"Quelle forme aura l'entreprise ?", o:["Établissement (entreprise individuelle)","SARL / SARLU","Pas encore enregistrée","Je ne sais pas"]},
-  {id:"investissement", type:"one", l:"Investissement total prévu ?", o:["Moins de 5 millions FCFA","5 à 15 millions FCFA","15 à 30 millions FCFA","Plus de 30 millions FCFA","Je préfère ne pas répondre"]},
-  {id:"financement", type:"many", l:"Comment l'usine est-elle financée ?", o:["Apport personnel","Prêt de banque ou de microfinance","Associés","Tontine","Famille"], other:true},
-  {id:"fonds_roulement", type:"one", l:"Y a-t-il de l'argent prévu pour les premiers mois (film, salaires, carburant) avant que les ventes suivent ?", o:["Oui","Non","Je ne sais pas"]},
   {id:"concurrence", type:"one", l:"Combien d'usines d'eau en sachet y a-t-il déjà dans la zone ?", o:["Aucune","1 ou 2","3 à 5","Plus de 5","Je ne sais pas"]},
   {id:"prix_concurrents", type:"text", short:true, l:"À quel prix les concurrents vendent-ils le paquet ? (comptoir, revendeur)"}
  ]},
