@@ -112,9 +112,12 @@ pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);borde
 const S = [
  {t:"L'usine", intro:"Pour comprendre le projet.", q:[
   {id:"nom", type:"text", short:true, l:"Votre nom"},
+  {id:"ville", type:"text", short:true, l:"Ville et quartier de l'usine"},
   {id:"ouverture", type:"one", l:"Quand l'usine doit-elle ouvrir ?", o:["Dans moins d'un mois","Dans 1 à 3 mois","Dans 3 à 6 mois","Dans plus de 6 mois","Pas encore de date"]},
   {id:"produits", type:"many", l:"Quels produits allez-vous vendre ?", o:["Sachets d'eau (pure water)","Bouteilles 0,5 L","Bouteilles 1,5 L","Bidons 5 L","Bidons 10 L","Bonbonnes 18,9 L / 20 L","Glace / sachets glacés"], other:true},
   {id:"conditionnement", type:"one", l:"Comment les sachets seront-ils vendus ?", o:["Au sac / paquet (ex. 30 sachets)","À l'unité","Les deux"], other:true},
+  {id:"source", type:"one", l:"D'où viendra l'eau ?", o:["Forage","Réseau CAMWATER","Les deux","Pas encore décidé"], other:true},
+  {id:"equipes", type:"one", l:"Combien d'équipes de production ?", o:["Une seule équipe, la journée","Deux équipes (jour et soir)","Production 24 h / 24","Pas encore décidé"]},
   {id:"capacite", type:"one", l:"Production prévue par jour (en sacs / paquets) ?", o:["Moins de 200","200 à 500","500 à 1 000","Plus de 1 000","Je ne sais pas encore"]},
   {id:"machines", type:"many", l:"Quels équipements sont prévus ?", o:["Machine d'ensachage automatique","Forage","Traitement / filtration (osmose, UV)","Groupe électrogène","Tricycle(s) / moto(s) de livraison","Camion / véhicule de livraison","Chambre froide / congélateurs"], other:true}
  ]},
@@ -122,19 +125,25 @@ const S = [
   {id:"utilisateurs", type:"many", l:"Qui utilisera l'application ?", o:["Le patron","Un gérant / responsable","Le caissier ou la caissière","Les opérateurs de production","Les livreurs","Le magasinier","Un comptable"], other:true},
   {id:"nb_livreurs", type:"one", l:"Combien de livreurs au départ ?", o:["Aucun, les clients viennent à l'usine","1 à 2","3 à 5","6 à 10","Plus de 10"]},
   {id:"nb_employes", type:"one", l:"Combien d'employés au total ?", o:["1 à 3","4 à 8","9 à 15","Plus de 15"]},
-  {id:"telephones", type:"one", l:"Les employés ont-ils un smartphone ?", o:["Oui, tous","Certains seulement","Non, il faudra en acheter","Je ne sais pas"]},
+  {id:"telephones", type:"one", l:"Les employés ont-ils un smartphone ?", o:["Oui, tous","Certains seulement","Certains ont seulement un téléphone simple (sans internet)","Non, il faudra en acheter","Je ne sais pas"]},
+  {id:"forfait", type:"one", l:"Qui paiera le forfait internet des employés qui utilisent l'application ?", o:["L'usine","L'employé lui-même","Pas encore décidé"]},
   {id:"tel_patron", type:"many", l:"Sur quoi le patron utilisera-t-il l'application ?", o:["Téléphone Android","iPhone","Ordinateur","Tablette"]},
   {id:"internet", type:"one", l:"La connexion internet sur les routes de livraison est…", o:["Bonne partout","Parfois coupée","Souvent absente","Je ne sais pas"], hint:"Si la connexion est mauvaise, l'application doit fonctionner sans internet et se synchroniser plus tard."},
-  {id:"langue", type:"many", l:"Dans quelle langue l'application doit-elle être ?", o:["Français","Anglais"], other:true},
+  {id:"langue", type:"many", l:"Dans quelle langue l'application doit-elle être ?", o:["Français","Anglais","Pidgin (pour certains écrans ou messages)"], other:true},
   {id:"aise", type:"one", l:"Les employés sont-ils à l'aise avec les applications ?", o:["Oui, ils utilisent WhatsApp et Mobile Money sans problème","Moyennement","Peu, il faut des écrans très simples"]}
  ]},
  {t:"La vente", intro:"Comment l'eau arrivera chez les clients.", q:[
   {id:"canaux", type:"many", l:"Comment allez-vous vendre ?", o:["Livraison par nos livreurs","Vente directe à l'usine","Dépôts / revendeurs dans les quartiers","Contrats (boutiques, restaurants, écoles, entreprises)","Événements (mariages, funérailles, fêtes)"], other:true},
   {id:"clients", type:"many", l:"Quels types de clients aurez-vous ?", o:["Particuliers","Petites boutiques / vendeuses","Revendeurs","Grossistes","Bars, restaurants, hôtels","Entreprises / administrations"], other:true},
   {id:"prix", type:"one", l:"Les prix seront-ils différents selon le client ?", o:["Oui, un prix par type de client","Oui, avec des remises au volume","Non, un seul prix pour tous","Pas encore décidé"]},
+  {id:"prix_types", type:"many", l:"Quels prix différents prévoyez-vous ?", o:["Prix comptoir (à l'usine)","Prix tournée (vendu par le livreur)","Prix revendeur / revendeuse","Prix grossiste","Prix événement"], other:true},
   {id:"credit", type:"one", l:"Allez-vous vendre à crédit ?", o:["Oui, souvent","Oui, à quelques clients de confiance","Non, jamais","Pas encore décidé"]},
+  {id:"credit_livreur", type:"one", l:"Les livreurs pourront-ils faire crédit aux clients ?", o:["Non, seule l'usine décide du crédit","Oui, avec l'accord du patron","Oui, librement","Pas encore décidé"]},
+  {id:"momo_numero", type:"one", l:"Les clients paieront le Mobile Money sur quel numéro ?", o:["Uniquement le numéro de l'usine","Le numéro du livreur","Pas encore décidé"]},
   {id:"paiements", type:"many", l:"Moyens de paiement acceptés ?", o:["Espèces","Orange Money","MTN Mobile Money","Virement bancaire","Chèque"], other:true},
   {id:"commission", type:"one", l:"Comment les livreurs seront-ils payés ?", o:["Salaire fixe","Commission sur les ventes","Salaire + commission","Pas encore décidé"], other:true},
+  {id:"commission_regle", type:"one", l:"Si les livreurs ont une commission, comment sera-t-elle payée ?", o:["Payée à part, chaque soir","Payée à part, chaque semaine ou chaque mois","Le livreur la garde sur l'argent du soir","Pas de commission"]},
+  {id:"tricycles", type:"one", l:"À qui appartiendront les tricycles / motos de livraison ?", o:["À l'usine","Aux livreurs","En location","Pas de tricycle"], other:true},
   {id:"emballages", type:"one", l:"Y aura-t-il des emballages consignés (bonbonnes, bidons à retourner) ?", o:["Oui","Non","Peut-être"]}
  ]},
  {t:"Ce dont l'application a besoin", intro:"Pour chaque fonction, choisissez si elle est indispensable, utile ou inutile.", need:true, q:[
@@ -156,6 +165,17 @@ const S = [
   {id:"f_salaires", l:"Salaires et commissions", d:"Calcul automatique de la paie et des commissions"},
   {id:"f_maintenance", l:"Entretien des machines", d:"Calendrier d'entretien, pannes, changement des filtres"},
   {id:"f_qualite", l:"Contrôle qualité de l'eau", d:"Tests, analyses, nettoyage des cuves"},
+  {id:"f_courant", l:"Coupures de courant et groupe électrogène", d:"Coupures ENEO, heures de marche du groupe, carburant consommé"},
+  {id:"f_casse", l:"Casse et invendus des livreurs", d:"Paquets abîmés en route, retours du soir, comparaison entre livreurs"},
+  {id:"f_comptage", l:"Comptages à deux avec validation", d:"Chargement, retour et argent du soir validés par deux personnes dans l'application"},
+  {id:"f_equipes", l:"Équipes et passation", d:"Production par équipe, rebuts, film, paquets par heure, notes de passation"},
+  {id:"f_primes", l:"Primes de production", d:"Prime calculée sur les paquets bons, les rebuts et le film"},
+  {id:"f_prospects", l:"Prospection par les livreurs", d:"Boutiques, maquis, chantiers visités qui n'achètent pas encore, et pourquoi"},
+  {id:"f_evenements", l:"Commandes d'événements avec acompte", d:"Mariages, funérailles, baptêmes : acompte, date, bon de livraison"},
+  {id:"f_consigne", l:"Bonbonnes et emballages consignés", d:"Qui a combien de bonbonnes, cautions versées et rendues"},
+  {id:"f_saisons", l:"Préparation de la saison sèche", d:"Prévoir le stock de film et la production quand les ventes montent"},
+  {id:"f_demarches", l:"Autorisations et analyses officielles", d:"Dates des analyses, certification, autorisations, rappels avant expiration"},
+  {id:"f_impots", l:"Impôts et CNPS", d:"Rappels des échéances, dépenses fiscales et sociales"},
   {id:"f_tableau", l:"Tableau de bord du patron", d:"Résumé du jour et du mois sur son téléphone"},
   {id:"f_alertes", l:"Alertes au patron", d:"Écart de caisse, crédit en retard, stock bas, panne"},
   {id:"f_marges", l:"Coût de revient et bénéfice", d:"Coût par sac, marge par produit et par type de client"},
@@ -173,7 +193,17 @@ const S = [
   {id:"suivi", type:"one", l:"À quelle fréquence le patron veut-il voir les chiffres ?", o:["En temps réel, à tout moment","Un résumé chaque soir","Une fois par semaine","Une fois par mois"]},
   {id:"notif", type:"many", l:"Comment recevoir les alertes ?", o:["Notification dans l'application","Message WhatsApp","SMS","Pas d'alerte"]},
   {id:"acces", type:"one", l:"Les employés peuvent-ils voir les chiffres de l'usine ?", o:["Non, seulement leur propre travail","Le gérant voit tout, les autres seulement leur travail","Tout le monde voit tout"]},
+  {id:"comptes", type:"many", l:"Faut-il rendre des comptes à quelqu'un d'autre ?", o:["Des associés","Une banque ou une microfinance","Un comptable","Non, personne"], other:true},
   {id:"modif", type:"one", l:"Qui peut corriger une saisie déjà enregistrée ?", o:["Seulement le patron","Le patron et le gérant","Chacun peut corriger ses saisies, avec un historique"]}
+ ]},
+ {t:"Avant l'ouverture", intro:"Pour savoir où en est le projet.", q:[
+  {id:"demarches", type:"many", l:"Où en sont les démarches ?", o:["Entreprise enregistrée (RCCM, NIU)","Analyse de l'eau faite par un laboratoire","Certification / autorisation de l'eau en cours (ANOR, ministère)","Inspection d'hygiène prévue","Pas encore commencé","Je ne sais pas"], other:true},
+  {id:"statut", type:"one", l:"Quelle forme aura l'entreprise ?", o:["Établissement (entreprise individuelle)","SARL / SARLU","Pas encore enregistrée","Je ne sais pas"]},
+  {id:"investissement", type:"one", l:"Investissement total prévu ?", o:["Moins de 5 millions FCFA","5 à 15 millions FCFA","15 à 30 millions FCFA","Plus de 30 millions FCFA","Je préfère ne pas répondre"]},
+  {id:"financement", type:"many", l:"Comment l'usine est-elle financée ?", o:["Apport personnel","Prêt de banque ou de microfinance","Associés","Tontine","Famille"], other:true},
+  {id:"fonds_roulement", type:"one", l:"Y a-t-il de l'argent prévu pour les premiers mois (film, salaires, carburant) avant que les ventes suivent ?", o:["Oui","Non","Je ne sais pas"]},
+  {id:"concurrence", type:"one", l:"Combien d'usines d'eau en sachet y a-t-il déjà dans la zone ?", o:["Aucune","1 ou 2","3 à 5","Plus de 5","Je ne sais pas"]},
+  {id:"prix_concurrents", type:"text", short:true, l:"À quel prix les concurrents vendent-ils le paquet ? (comptoir, revendeur)"}
  ]},
  {t:"Aspects pratiques", intro:"Pour choisir comment construire l'application.", q:[
   {id:"actuel", type:"many", l:"Qu'utilise le patron aujourd'hui pour gérer ses affaires ?", o:["Cahier","Excel","Une autre application","Rien pour l'instant"], other:true},
